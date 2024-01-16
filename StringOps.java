@@ -44,19 +44,25 @@ public class StringOps {
     public static String camelCase(String string) {
         String result = "";
         boolean newWord = true;
+        int wordCount = 0;
         for (int i = 0; i < string.length(); i++) {
             char ch = string.charAt(i);
             if (ch == ' ') {
                 newWord = true;
                 continue;
             }
-            if (newWord && ch >= 'a' && ch <= 'z') {
-                ch -= 32; // Convert first letter of each word to uppercase
-            } else if (!newWord && ch >= 'A' && ch <= 'Z') {
+            if (newWord) {
+                if (wordCount == 0 && ch >= 'A' && ch <= 'Z') {
+                    ch += 32; // Convert first letter of the first word to lowercase
+                } else if (wordCount > 0 && ch >= 'a' && ch <= 'z') {
+                    ch -= 32; // Convert first letter of each word (except the first word) to uppercase
+                }
+                newWord = false;
+                wordCount++;
+            } else if (ch >= 'A' && ch <= 'Z') {
                 ch += 32; // Convert remaining letters to lowercase
             }
             result += ch;
-            newWord = false;
         }
         return result;
     }
